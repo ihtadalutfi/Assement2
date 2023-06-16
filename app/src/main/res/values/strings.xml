@@ -17,4 +17,5 @@
     <string name="idrusd">Indonesia Rupiah -> Dolar Amerika </string>
     <string name="bagikan">Bagikan</string>
     <string name="bagikan_template">Idr: %1$s \nKonversi: %2$s \n %3$s</string>
+    <string name="koneksi_error">Koneksi error</string>
 </resources>

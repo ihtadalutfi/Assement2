@@ -11,18 +11,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.konversimatauang.R
 import com.example.konversimatauang.databinding.FragmentKonversiBinding
+import com.example.konversimatauang.model.MainViewModel
+import com.example.konversimatauang.network.UangApi
 
 const val KEY_HASIL = "hasil_key"
 const val KEY_KONVERSI = "konversi_key"
 
 class KonversiFragment : Fragment() {
+
+
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this)[MainViewModel::class.java]
+    }
+
     private lateinit var binding: FragmentKonversiBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentKonversiBinding.inflate(layoutInflater, container, false)
         binding.button.setOnClickListener { hitungUsd() }
         binding.negara.setOnClickListener { view ->
@@ -40,8 +49,29 @@ class KonversiFragment : Fragment() {
         setHasOptionsMenu(true)
         return binding.root
 
+        viewModel.getStatus().observe(viewLifecycleOwner) {
+            updateProgress(it)
+        }
 
     }
+
+    private fun updateProgress(status: UangApi.ApiStatus) {
+        when (status) {
+            UangApi.ApiStatus.LOADING -> {
+                binding.progressBar.visibility = View.VISIBLE
+            }
+
+            UangApi.ApiStatus.SUCCESS -> {
+                binding.progressBar.visibility = View.GONE
+            }
+            UangApi.ApiStatus.FAILED -> {
+                binding.progressBar.visibility = View.GONE
+                binding.networkError.visibility = View.VISIBLE
+            }
+        }
+    }
+
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -58,7 +88,7 @@ class KonversiFragment : Fragment() {
             Toast.makeText(context, R.string.idr_kosong, Toast.LENGTH_LONG).show()
             return
         }
-        var usd = 14471
+        val usd = 14471
         val konversi = idr.toFloat()/ usd
         binding.hasil.text = getString(R.string.hasil, konversi)
         binding.konversiii.text = getString(R.string.idrusd)

@@ -8,14 +8,16 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.konversimatauang.R
 import com.example.konversimatauang.databinding.FragmentHomeBinding
+import com.example.konversimatauang.model.MainViewModel
+import com.example.konversimatauang.network.UangApi
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         binding.start.setOnClickListener { view: View ->
@@ -25,8 +27,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         setHasOptionsMenu(true)
         return binding.root
+
+
+
     }
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+
+
+            override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.option_menu, menu)
     }
@@ -38,4 +45,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 }
